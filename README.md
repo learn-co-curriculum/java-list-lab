@@ -10,7 +10,7 @@ In this lesson, we will practice implementing the `List` interface using the
 `ArrayList` implementation.
 
 Fork and clone this repository. When you do, you will see a `Library` class, a
-`Book` class, and a `LibraryDriver` class.
+`Book` class, and a `LibraryTest` class for unit testing.
 
 ## Instructions
 
@@ -24,169 +24,146 @@ Follow the given instructions and tips:
     - Author
     - Genre
     - Number of pages
-    - The `Book` class will also need accessor and mutator methods for accessing
-      the above properties.
+  - Create a constructor that takes in every property as an argument.
+  - The `Book` class will also need accessor and mutator methods for accessing
+    the above properties.
+  - Add a `toString()` method to the `Book` class.
+  - Implement this class **before** implementing the `Library` class.
 - Create a `Library` class.
   - The `Library` class will need the following properties:
-    - List of `Book` objects
-    - The `Library` class will need to be able to add a `Book` to its library.
-    - The `Library` class will need to be able to display the `Book` objects in
-      its library.
-    - The `Library` class will need to be able to check if a `Book` object exists
-      in its library based off the title.
-- Use the `LibraryDriver` class to run your code and use as a reference to how
-  your code will be tested.
+    - List of `Book` objects called `books`.
+  - Create a getter method for the list of `Book` objects.
+  - The `Library` class will need to be able to add a `Book` to its library.
+    - Write the code for the `addBook()` method.
+    - Remove the `@Disabled` annotation from the `addBookTest()` method in the
+      unit test and run the test.
+  - The `Library` class will need to be able to display the `Book` objects in
+    its library.
+    - Write the code for the `displayBooks()` method.
+    - Remove the `@Disabled` annotation from the `displayBooksTest()` method in
+      the unit test and run the test.
+  - The `Library` class will need to be able to check if a `Book` object exists
+    in its library based off the title.
+    - Write the code for the `findBook()` method.
+    - Remove the `@Disabled` annotation from the `findBookTest()` method in the
+      unit test and run the test.
+
+Run all the unit tests in the `LibraryTest` class and ensure everything passes.
+It is recommended you work on one method at a time and test before moving onto
+the next test. You may also run the tests with the IntelliJ debugger, or the
+Java Visualizer.
 
 ## Starter Code
 
-Consider the driver class when writing the code for the `Book` and `Library`
-classes:
+Consider the starter code below:
+
+### Library.java
 
 ```java
-import java.util.InputMismatchException;
-import java.util.Scanner;
+public class Library {
 
-public class LibraryDriver {
-  public static void main(String[] args) {
-    Library library = new Library();
-    Scanner scanner = new Scanner(System.in);
-
-    int choice = 0;
-    do {
-      printMenu();
-      choice = scanner.nextInt();
-      try {
-        switch (choice) {
-          case 0:
-            break;
-          case 1:
-            Book book = promptAddBook();
-            if (library.addBook(book)) {
-              System.out.println(book.getTitle() + " has been added to the library!");
-            } else {
-              System.out.println(book.getTitle() + " could not be added to the library.");
-            }
-            break;
-          case 2:
-            library.displayBooks();
-            break;
-          case 3:
-            String title = promptTitle();
-            if (library.findBook(title)) {
-              System.out.println("We found the book titled " + title);
-            } else {
-              System.out.println("We could not find the book titled " + title);
-            }
-            break;
-          default:
-            System.err.println("An error has occurred!");
-        }
-      } catch (InputMismatchException inputMismatchException) {
-        scanner.nextLine();    // Clear the invalid input
-        System.out.println("Invalid input - " + inputMismatchException.getMessage());
-      }
-      
-      System.out.println();
-    } while (choice != 0);
+  public Library() {
   }
 
-  public static void printMenu() {
-    System.out.println("Welcome to the library! What would you like to do?");
-    System.out.println("0. Exit");
-    System.out.println("1. Add book to library");
-    System.out.println("2. Show books in library");
-    System.out.println("3. Get book from library");
-    System.out.println();
+  public boolean addBook(Book book) {
+    // Write code here
+    return false;
   }
 
-  public static Book promptAddBook() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("What is the title of the book?");
-    String title = scanner.nextLine();
-    System.out.println("What is the author of the book?");
-    String author = scanner.nextLine();
-    System.out.println("What is the genre of the book?");
-    String genre = scanner.nextLine();
-    System.out.println("How many pages is the book?");
-    int pages = scanner.nextInt();
-    return new Book(title, author, genre, pages);
+  public void displayBooks() {
+    // Write code here
   }
 
-  public static String promptTitle() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("What is the title of the book you are looking for?");
-    return scanner.nextLine();
+  public boolean findBook(String title) {
+    // Write code here
+    return false;
   }
 }
 ```
 
-## Example Output
+### LibraryTest.java
 
-Here is an example run of the code for your reference. Make sure your output
-looks the same when given these values:
+```java
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-```text
-Welcome to the library! What would you like to do?
-0. Exit
-1. Add book to library
-2. Show books in library
-3. Get book from library
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
-1
-What is the title of the book?
-Anne of Green Gables
-What is the author of the book?
-L.M. Montgomery
-What is the genre of the book?
-Fiction
-How many pages is the book?
-336
-Anne of Green Gables has been added to the library!
+import static org.junit.jupiter.api.Assertions.*;
 
-Welcome to the library! What would you like to do?
-0. Exit
-1. Add book to library
-2. Show books in library
-3. Get book from library
+class LibraryTest {
 
-1
-What is the title of the book?
-Little Women
-What is the author of the book?
-Louisa May Alcott
-What is the genre of the book?
-Fiction
-How many pages is the book?
-759
-Little Women has been added to the library!
+    private final PrintStream standardOut = System.out;
+    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-Welcome to the library! What would you like to do?
-0. Exit
-1. Add book to library
-2. Show books in library
-3. Get book from library
+    private final Library emptyLibrary = new Library();
+    private final Library testLibrary = new Library();
 
-3
-What is the title of the book you are looking for?
-Peter Pan
-We could not find the book titled Peter Pan
+    @BeforeEach
+    void setUp() {
+        System.setOut(new PrintStream(outputStream));
+    }
 
-Welcome to the library! What would you like to do?
-0. Exit
-1. Add book to library
-2. Show books in library
-3. Get book from library
+    @AfterEach
+    void tearDown() {
+        System.setOut(standardOut);
+    }
 
-3
-What is the title of the book you are looking for?
-Anne of Green Gables
-We found the book titled Anne of Green Gables
+    @Disabled
+    @Test
+    void addBookTest() {
+        // Check the books list is empty
+        assertTrue(emptyLibrary.getBooks().isEmpty());
+        assertTrue(testLibrary.getBooks().isEmpty());
 
-Welcome to the library! What would you like to do?
-0. Exit
-1. Add book to library
-2. Show books in library
-3. Get book from library
+        // Add a book to the testLibrary
+        testLibrary.addBook(new Book("Anne of Green Gables", "L.M. Montgomery", "Fiction", 336));
+        assertFalse(testLibrary.getBooks().isEmpty());
+        assertEquals(1, testLibrary.getBooks().size());
 
-0
+        // Add a second book the testLibrary
+        testLibrary.addBook(new Book("Little Women", "Louisa May Alcott", "Fiction", 759));
+        assertEquals(2, testLibrary.getBooks().size());
+    }
+
+    @Disabled
+    @Test
+    void displayBooksTest() {
+        // Check if we displayed the contents of the emptyLibrary properly
+        emptyLibrary.displayBooks();
+        String expectedOutput = "";
+        assertEquals(expectedOutput, outputStream.toString());
+
+        // Check if we displayed the contents of the testLibrary properly
+        addTestBooks();
+        testLibrary.displayBooks();
+        expectedOutput = "Book{title='Anne of Green Gables', author='L.M. Montgomery', genre='Fiction', pages=336}\n"
+                + "Book{title='Little Women', author='Louisa May Alcott', genre='Fiction', pages=759}";
+        assertEquals(expectedOutput, outputStream.toString().trim());
+
+    }
+
+    @Disabled
+    @Test
+    void findBook() {
+        // Try to find a book in an empty library
+        assertFalse(emptyLibrary.findBook("Anne of Green Gables"));
+
+        // Ensure the title is found
+        addTestBooks();
+        assertTrue(testLibrary.findBook("Anne of Green Gables"));
+
+        // Ensure the title is not found
+        assertFalse(testLibrary.findBook("Peter Pan"));
+
+    }
+
+    private void addTestBooks() {
+        testLibrary.addBook(new Book("Anne of Green Gables", "L.M. Montgomery", "Fiction", 336));
+        testLibrary.addBook(new Book("Little Women", "Louisa May Alcott", "Fiction", 759));
+    }
+}
 ```
